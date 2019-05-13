@@ -21,7 +21,7 @@
             const string Maven = "pom.xml";
         }
 
-            public static class JavadocArgumentModel
+        public static class JavadocArgumentModel
         {
             public const string ClassPath = "-classpath";
             public const string Encoding = "-encoding";

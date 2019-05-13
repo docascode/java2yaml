@@ -45,7 +45,7 @@
 
             if (!File.Exists(configPath) || !File.Exists(repoListPath))
             {
-                Console.Error.WriteLine($"Cannot find config file: {Constants.ConfigFileName} or {Constants.RepoListFileName}");
+                Console.Error.WriteLine($"Cannot find config file: {configPath} or {repoListPath}");
                 return false;
             }
 
