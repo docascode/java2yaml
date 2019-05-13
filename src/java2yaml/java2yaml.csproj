@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\shared\base.props" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E3865B89-370C-474D-8FE3-64B986107767}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Microsoft.Content.Build.Java2Yaml</RootNamespace>
+    <AssemblyName>java2yaml</AssemblyName>
+    <TargetFramework>net462</TargetFramework>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.Content.Build.Java2Yaml.Common\Microsoft.Content.Build.Java2Yaml.Common.csproj">
+      <Project>{1a4ca070-7589-4cad-b320-5fb5d08b3c43}</Project>
+      <Name>Microsoft.Content.Build.Java2Yaml.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Microsoft.Content.Build.Java2Yaml.Constants\Microsoft.Content.Build.Java2Yaml.Constants.csproj">
+      <Project>{f24f1b97-718d-4490-a022-c4f41241a9f9}</Project>
+      <Name>Microsoft.Content.Build.Java2Yaml.Constants</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Microsoft.Content.Build.Java2Yaml.DataContracts\Microsoft.Content.Build.Java2Yaml.DataContracts.csproj">
+      <Project>{e9849cdd-0710-4547-a7d8-61a9c55dd578}</Project>
+      <Name>Microsoft.Content.Build.Java2Yaml.DataContracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Microsoft.Content.Build.Java2Yaml.Steps\Microsoft.Content.Build.Java2Yaml.Steps.csproj">
+      <Project>{cbe46d14-244c-4d4b-8e0d-26fc681170c2}</Project>
+      <Name>Microsoft.Content.Build.Java2Yaml.Steps</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

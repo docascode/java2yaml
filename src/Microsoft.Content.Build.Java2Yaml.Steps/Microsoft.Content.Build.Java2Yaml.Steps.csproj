@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\shared\base.props" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{CBE46D14-244C-4D4B-8E0D-26FC681170C2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Microsoft.Content.Build.Java2Yaml.Steps</RootNamespace>
+    <TargetFramework>net462</TargetFramework>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.Content.Build.Java2Yaml.Common\Microsoft.Content.Build.Java2Yaml.Common.csproj">
+      <Project>{1a4ca070-7589-4cad-b320-5fb5d08b3c43}</Project>
+      <Name>Microsoft.Content.Build.Java2Yaml.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Microsoft.Content.Build.Java2Yaml.Constants\Microsoft.Content.Build.Java2Yaml.Constants.csproj">
+      <Project>{f24f1b97-718d-4490-a022-c4f41241a9f9}</Project>
+      <Name>Microsoft.Content.Build.Java2Yaml.Constants</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Microsoft.Content.Build.Java2Yaml.DataContracts\Microsoft.Content.Build.Java2Yaml.DataContracts.csproj">
+      <Project>{e9849cdd-0710-4547-a7d8-61a9c55dd578}</Project>
+      <Name>Microsoft.Content.Build.Java2Yaml.DataContracts</Name>
+    </ProjectReference>
+    </ItemGroup>
+    <ItemGroup>
+    <None Include="tools\docfx-doclet.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>
