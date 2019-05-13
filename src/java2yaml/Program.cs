@@ -34,7 +34,7 @@
 
         private static bool ValidateConfig(string[] args)
         {
-            if (args.Length == 0 && args.Length == 2)
+            if (args.Length != 0 && args.Length != 2)
             {
                 Console.Error.WriteLine("Unrecognized parameters. Usage : Java2Yaml.exe [code2yaml.json, repo.json]");
                 return false;
