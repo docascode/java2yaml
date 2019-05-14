@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.IO;
 
-    using Microsoft.Content.Build.Java2Yaml.Constants;
+    using Microsoft.Content.Build.Java2Yaml;
 
     class Program
     {

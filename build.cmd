@@ -32,7 +32,7 @@ SET BuildErrorLevel=%ERRORLEVEL%
 GOTO :Exit
 
 :DownloadDoclet
-SET DocletLocation=%~dp0src\Microsoft.Content.Build.Java2Yaml.Steps\tools
+SET DocletLocation=%~dp0src\java2yaml\Tools
 IF NOT EXIST "%DocletLocation%\docfx-doclet.jar" (
 IF NOT EXIST "%DocletLocation%" MD "%DocletLocation%"
 ECHO Download docfx-doclet to "%DocletLocation%" 

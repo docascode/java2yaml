@@ -1,4 +1,4 @@
-﻿namespace Microsoft.Content.Build.Java2Yaml.Constants
+﻿namespace Microsoft.Content.Build.Java2Yaml
 {
     public static class Constants
     {

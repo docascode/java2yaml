@@ -28,5 +28,6 @@ Shared/version
 *.user
 *.exe
 *.pdb
+*.jar
 *.sln.docstates
 **/Redis/dump.rdb
