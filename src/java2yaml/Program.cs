@@ -1,10 +1,8 @@
-﻿namespace Microsoft.Content.Build.JavaYaml
+﻿namespace Microsoft.Content.Build.Java2Yaml
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
-
-    using Microsoft.Content.Build.Java2Yaml;
 
     class Program
     {
