@@ -32,7 +32,7 @@
         {
             var repos = JsonConvert.DeserializeObject<RepositoryModel>(File.ReadAllText(repoListPath)).Repository;
 
-            var list = (from p in repo
+            var list = (from p in repos
                         let FolderName = string.Concat(Constants.Src, p.FolderName)
                         select TransformPath(repoListPath, FolderName)).ToList();
 
