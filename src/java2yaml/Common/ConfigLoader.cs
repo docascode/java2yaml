@@ -30,7 +30,7 @@
 
         public static List<string> LoadRepositoryList(string repoListPath)
         {
-            var repo = JsonConvert.DeserializeObject<RepositoryModel>(File.ReadAllText(repoListPath)).Repository;
+            var repos = JsonConvert.DeserializeObject<RepositoryModel>(File.ReadAllText(repoListPath)).Repository;
 
             var list = (from p in repo
                         let FolderName = string.Concat(Constants.Src, p.FolderName)

@@ -6,6 +6,8 @@
 
     class Program
     {
+        private static ConfigModel _config;
+
         static int Main(string[] args)
         {
             if (!ValidateConfig(args))
@@ -46,6 +48,18 @@
                 Console.Error.WriteLine($"Cannot find config file: {configPath} or {repoListPath}");
                 return false;
             }
+
+            try
+            {
+                _config = ConfigLoader.LoadConfig(Path.GetFullPath(configPath), Path.GetFullPath(repoListPath));
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Fail to deserialize config files: {configPath}, {repoListPath} . Exception: {ex}");
+                return false;
+            }
+
+            Console.WriteLine($"Config files {configPath}, {repoListPath} found. Start processing...");
 
             return true;
         }
