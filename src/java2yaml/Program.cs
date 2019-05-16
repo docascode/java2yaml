@@ -1,7 +1,7 @@
 ﻿namespace Microsoft.Content.Build.Java2Yaml
 {
     using System;
-    using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
 
     class Program
@@ -16,19 +16,30 @@
             }
 
             var status = 1;
+            var watch = Stopwatch.StartNew();
+
+            var procedure = new StepCollection(
+                                new GenerateDocument(),
+                                new CentralizeDocument(),
+                                new GenerateToc()
+                            );
 
             try
             {
-                // generate documents
+                procedure.RunAsync(_config).Wait();
             }
 
             catch
             {
-                // catch exception
+                // do nothing
+            }
+            finally
+            {
+                watch.Stop();
             }
 
-            status = 0;
-
+            var statusString = status == 0 ? "Succeeded" : "Failed";
+            Console.WriteLine($"{statusString} in {watch.ElapsedMilliseconds} milliseconds.");
             return status;
         }
 
