@@ -17,14 +17,22 @@
 
             var status = 1;
 
+            var procedure = new StepCollection(
+            new GenerateDocument(),
+            new CentralizeDocument(),
+            new GenerateToc()
+            );
+
             try
             {
-                // generate documents
+                procedure.RunAsync(_config).Wait();
             }
 
             catch
             {
                 // catch exception
+
+                return status;
             }
 
             status = 0;
