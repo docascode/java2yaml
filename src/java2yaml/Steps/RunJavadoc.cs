@@ -10,10 +10,7 @@
             RepositoryPath = path;
         }
 
-        public string StepName
-        {
-            get { return "RunJavadoc"; }
-        }
+        public string StepName => "RunJavadoc"; 
 
         public string RepositoryPath { get; }
 

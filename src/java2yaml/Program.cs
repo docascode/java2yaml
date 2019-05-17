@@ -3,12 +3,13 @@
     using System;
     using System.Diagnostics;
     using System.IO;
+    using System.Threading.Tasks;
 
     class Program
     {
         private static ConfigModel _config;
 
-        static int Main(string[] args)
+        static async Task<int> Main(string[] args)
         {
             if (!IsDocletExstis())
             {
@@ -31,7 +32,8 @@
 
             try
             {
-                procedure.RunAsync(_config).Wait();
+                await procedure.RunAsync(_config);
+                status = 0;
             }
 
             catch
@@ -84,7 +86,7 @@
         {
             var doclet = Path.Combine(PathUtility.GetAssemblyDirectory(), Constants.DocletLocation);
             
-            if(File.Exists(doclet))
+            if (File.Exists(doclet))
             {
                 return true;
             }

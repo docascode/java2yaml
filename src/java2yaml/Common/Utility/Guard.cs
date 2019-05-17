@@ -9,7 +9,6 @@
     {
         /// <summary>
         /// Validates argumentValue is not null and throws ArgumentNullException if it is null.
-        /// n
         /// </summary>
         /// <param name="argumentValue">
         /// The argument value.

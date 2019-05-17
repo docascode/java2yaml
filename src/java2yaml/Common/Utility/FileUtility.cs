@@ -19,7 +19,7 @@
         {
             Guard.ArgumentNotNullOrEmpty(rootPath, nameof(rootPath));
 
-            if(string.IsNullOrEmpty(extension))
+            if (string.IsNullOrEmpty(extension))
             {
                 extension = "*";
             }

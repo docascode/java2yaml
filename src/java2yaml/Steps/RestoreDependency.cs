@@ -11,13 +11,10 @@
         {
             RepositoryPath = path;
         }
-        public string StepName
-        {
-            get { return "RestoreDependency"; }
-        }
+
+        public string StepName => "RestoreDependency";
 
         public string RepositoryPath { get; }
-
 
         public Task RunAsync(ConfigModel config)
         {
@@ -25,26 +22,19 @@
             {
                 Guard.ArgumentNotNullOrEmpty(RepositoryPath, nameof(RepositoryPath));
 
-                var projectFiles = FileUtility.GetFilesByName(RepositoryPath, Constants.BuildTool.Maven);
+                var projectFiles = FileUtility.GetFilesByName(RepositoryPath, Constants.BuildTool.Maven).ToList();
                 var packagePath = Path.Combine(RepositoryPath, Constants.PackageFolder);
 
-                if (projectFiles.Count() == 0)
+                if (projectFiles.Count == 0)
                 {
-                    ConsoleLogger.WriteLine(new LogEntry
-                    {
-                        Phase = StepName,
-                        Level = LogLevel.Error,
-                        Message = " The project file pom.xml cannot be found, exiting..."
-                    });
-
-                    Environment.Exit(1);
+                    throw new System.Exception("POM.xml not available.");
                 }
 
                 ConsoleLogger.WriteLine(new LogEntry
                 {
                     Phase = StepName,
                     Level = LogLevel.Info,
-                    Message = $"{projectFiles.Count()} pom.xml founded."
+                    Message = $" {projectFiles.Count} pom.xml founded."
                 });
 
                 foreach (var file in projectFiles)
