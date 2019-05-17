@@ -10,6 +10,11 @@
 
         static int Main(string[] args)
         {
+            if (!IsDocletExstis())
+            {
+                return 1;
+            }
+
             if (!ValidateConfig(args))
             {
                 return 1;
@@ -73,6 +78,21 @@
             Console.WriteLine($"Config files {configPath}, {repoListPath} found. Start processing...");
 
             return true;
+        }
+
+        private static bool IsDocletExstis()
+        {
+            var doclet = Path.Combine(PathUtility.GetAssemblyDirectory(), Constants.DocletLocation);
+            
+            if(File.Exists(doclet))
+            {
+                return true;
+            }
+            else
+            {
+                Console.WriteLine($"Cannot found docfx-doclet.jar.");
+                return false;
+            }
         }
     }
 }

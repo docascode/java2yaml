@@ -13,7 +13,22 @@
         {
             return Task.Run(() =>
             {
-                //TODO
+                foreach (var path in config.RepositoryFolders)
+                {
+                    var procedure = new StepCollection(
+                        new RestoreDependency(path),
+                        new RunJavadoc(path));
+
+                    try
+                    {
+                        procedure.RunAsync(config).Wait();
+                    }
+
+                    catch
+                    {
+                        // do nothing
+                    }
+                }
             }
             );
         }

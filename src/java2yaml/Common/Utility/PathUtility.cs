@@ -65,6 +65,12 @@
 
             return !Path.IsPathRooted(path);
         }
+
+        public static string GetAssemblyDirectory()
+        {
+            return Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+        }
+
     }
 
     public class FilePathComparer
