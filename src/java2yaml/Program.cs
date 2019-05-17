@@ -3,13 +3,19 @@
     using System;
     using System.Diagnostics;
     using System.IO;
+    using System.Threading.Tasks;
 
     class Program
     {
         private static ConfigModel _config;
 
-        static int Main(string[] args)
+        static async Task<int> Main(string[] args)
         {
+            if (!IsDocletExstis())
+            {
+                return 1;
+            }
+
             if (!ValidateConfig(args))
             {
                 return 1;
@@ -26,7 +32,8 @@
 
             try
             {
-                procedure.RunAsync(_config).Wait();
+                await procedure.RunAsync(_config);
+                status = 0;
             }
 
             catch
@@ -73,6 +80,21 @@
             Console.WriteLine($"Config files {configPath}, {repoListPath} found. Start processing...");
 
             return true;
+        }
+
+        private static bool IsDocletExstis()
+        {
+            var doclet = Path.Combine(PathUtility.GetAssemblyDirectory(), Constants.DocletLocation);
+            
+            if (File.Exists(doclet))
+            {
+                return true;
+            }
+            else
+            {
+                Console.WriteLine($"Cannot found docfx-doclet.jar.");
+                return false;
+            }
         }
     }
 }

@@ -4,18 +4,21 @@
 
     public class GenerateDocument : IStep
     {
-        public string StepName
-        {
-            get { return "GenerateDocument"; }
-        }
+        public string StepName => "GenerateDocument";
 
         public Task RunAsync(ConfigModel config)
         {
-            return Task.Run(() =>
+            return Task.Run(async () =>
             {
-                //TODO
-            }
-            );
+                foreach (var path in config.RepositoryFolders)
+                {
+                    var procedure = new StepCollection(
+                        new RestoreDependency(path),
+                        new RunJavadoc(path));
+
+                    await procedure.RunAsync(config);
+                }
+            });
         }
 
     }

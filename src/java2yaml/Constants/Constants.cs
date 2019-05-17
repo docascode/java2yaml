@@ -15,10 +15,11 @@
 
         public const string Src = @"src\";
         public const string PackageFolder = @"packages";
+        public const string DocletLocation = @"tools\docfx-doclet.jar";
 
         public static class BuildTool
         {
-            const string Maven = "pom.xml";
+            public const string Maven = "pom.xml";
         }
 
         public static class JavadocArgumentModel
