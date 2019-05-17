@@ -27,7 +27,7 @@
 
                 if (projectFiles.Count == 0)
                 {
-                    throw new System.Exception("POM.xml not available.");
+                    throw new System.InvalidOperationException("POM.xml not available.");
                 }
 
                 ConsoleLogger.WriteLine(new LogEntry
