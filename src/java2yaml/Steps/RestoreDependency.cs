@@ -1,6 +1,5 @@
 ﻿namespace Microsoft.Content.Build.Java2Yaml
 {
-    using System;
     using System.IO;
     using System.Threading.Tasks;
     using System.Linq;
@@ -45,9 +44,9 @@
          );
         }
 
-        public void RunRestoreCommand(string packagePath, string workingDirectory)
+        private void RunRestoreCommand(string packagePath, string workingDirectory)
         {
-            string commandLineArgs = "/c mvn dependency:copy-dependencies -DoutputDirectory=" + packagePath;
+            string commandLineArgs = string.Concat("/c mvn dependency:copy-dependencies -DoutputDirectory=", packagePath);
 
             ConsoleLogger.WriteLine(new LogEntry
             {
