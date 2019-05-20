@@ -14,7 +14,7 @@
         public const string FolderName = "name";
 
         public const string Src = @"src\";
-        public const string Doc = @"_javadoc";
+        public const string Doc = "_javadoc";
         public const string PackageFolder = @"packages";
 
         public const string DocletClass = "com.microsoft.doclet.DocFxDoclet";
@@ -28,7 +28,7 @@
             public const string Java = "java";
         }
 
-        public static class BuildTool
+        public static class BuildToolConfig
         {
             public const string Maven = "pom.xml";
         }

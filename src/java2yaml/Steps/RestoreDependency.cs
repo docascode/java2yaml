@@ -21,7 +21,7 @@
             {
                 Guard.ArgumentNotNullOrEmpty(RepositoryPath, nameof(RepositoryPath));
 
-                var projectFiles = FileUtility.GetFilesByName(RepositoryPath, Constants.BuildTool.Maven).ToList();
+                var projectFiles = FileUtility.GetFilesByName(RepositoryPath, Constants.BuildToolConfig.Maven).ToList();
                 var packagePath = Path.Combine(RepositoryPath, Constants.PackageFolder);
 
                 if (projectFiles.Count == 0)

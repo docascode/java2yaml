@@ -30,7 +30,7 @@
                 GenerateFileList(RepositoryPath);
 
                 var options = GenerateOptions(RepositoryPath);
-                var commandLineArgs = string.Concat(options, " @files");
+                var commandLineArgs = $"{options} @{Constants.Files}";
 
                 ConsoleLogger.WriteLine(new LogEntry
                 {
@@ -47,7 +47,7 @@
         private void GenerateFileList(string repositoryPath)
         {
             int count = 0;
-            var inputPaths = GetInputPaths(repositoryPath).ToList();
+            var inputPaths = GetInputPaths(repositoryPath);
             var targetPath = Path.Combine(repositoryPath, Constants.Files);
 
             using (TextWriter tw = new StreamWriter(targetPath))
@@ -75,17 +75,18 @@
         // todo: fix doclet package to allow us invoke with this format "javadoc.exe @options @files"
         private string GenerateOptions(string repositoryPath)
         {
-            var option = new JavadocOptionModel();
+            var dependencies = GetDependencies(RepositoryPath);
+            var docletPath = Path.Combine(PathUtility.GetAssemblyDirectory(), Constants.DocletLocation);
+            var sourcePath = string.Join(";", GetInputPathsFromConfig(repositoryPath));
+            var outputPath = Path.Combine(repositoryPath, Constants.Doc);
 
-            JavadocOptionModel.Create(option,
-                 GetDependencies(RepositoryPath),
-                 Path.Combine(PathUtility.GetAssemblyDirectory(), Constants.DocletLocation),
-                 string.Join(";", GetInputPathsFromConfig(repositoryPath)),
-                 Path.Combine(repositoryPath, Constants.Doc));
-
-            return JavadocOptionModel.ToCmdArguments(option);
+            return "  -classpath " + dependencies
+              + " -encoding UTF-8"
+              + " -docletpath " + docletPath
+              + " -doclet com.microsoft.doclet.DocFxDoclet"
+              + " -sourcepath " + sourcePath
+              + " -outputpath " + outputPath;
         }
-
 
         private string GetDependencies(string repositoryPath)
         {
@@ -116,9 +117,9 @@
 
         private List<string> GetInputPathsFromConfig(string repositoryPath)
         {
-            return (_config.InputPaths
+            return _config.InputPaths
                 .Where(p => p.StartsWith(repositoryPath))
-                .ToList());
+                .ToList();
         }
 
         private List<string> RemoveExcludePaths(List<string> directories)
@@ -129,7 +130,6 @@
             {
                 var subDirectories = Directory.GetDirectories(dir, "*.*", SearchOption.AllDirectories)
                     .Where(p => !InExcludePaths(p))
-                    .Select(p => p)
                     .ToList();
 
                 paths.AddRange(subDirectories);
@@ -140,18 +140,7 @@
 
         private bool InExcludePaths(string dir)
         {
-            var list = _config.ExcludePaths
-                .Where(p => dir.StartsWith(p))
-                .ToList();
-
-            if (list.Count == 0)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return _config.ExcludePaths.Any(p => dir.StartsWith(p));
         }
     }
 }

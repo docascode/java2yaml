@@ -24,7 +24,7 @@
                 extension = "*";
             }
 
-            var pattern = string.Concat("*.", extension);
+            var pattern = $"*.{extension}";
             return Directory.GetFiles(rootPath, pattern, SearchOption.AllDirectories);
         }
     }
