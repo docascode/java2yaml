@@ -76,26 +76,14 @@
         private string GenerateOptions(string repositoryPath)
         {
             var option = new JavadocOptionModel();
-            var optionBuilder = new StringBuilder();
 
-            option.ClassPath = GetDependencies(RepositoryPath);
-            option.DocletPath = Path.Combine(PathUtility.GetAssemblyDirectory(), Constants.DocletLocation);
-            option.SourcePath = string.Join(";", GetInputPathsFromConfig(repositoryPath));
-            option.OutputPath = Path.Combine(repositoryPath, Constants.Doc);
+            JavadocOptionModel.Create(option,
+                 GetDependencies(RepositoryPath),
+                 Path.Combine(PathUtility.GetAssemblyDirectory(), Constants.DocletLocation),
+                 string.Join(";", GetInputPathsFromConfig(repositoryPath)),
+                 Path.Combine(repositoryPath, Constants.Doc));
 
-            foreach (var prop in typeof(JavadocOptionModel).GetProperties())
-            {
-                var optionName = prop.Name;
-                var optionValue = option.GetType().GetProperty(optionName).GetValue(option, null);
-
-                optionBuilder.Append("-");
-                optionBuilder.Append(optionName.ToLower());
-                optionBuilder.Append(" ");
-                optionBuilder.Append(optionValue);
-                optionBuilder.Append(" ");
-            };
-
-            return optionBuilder.ToString();
+            return JavadocOptionModel.ToCmdArguments(option);
         }
 
 
@@ -130,9 +118,7 @@
         {
             return (_config.InputPaths
                 .Where(p => p.StartsWith(repositoryPath))
-                .Select(p => p)
-                .ToList()
-                );
+                .ToList());
         }
 
         private List<string> RemoveExcludePaths(List<string> directories)
