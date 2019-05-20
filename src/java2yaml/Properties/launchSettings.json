@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "java2yaml": {
-      "commandName": "Project",
-      "commandLineArgs": "D:\\JavaCode\\partner-center-java-docs\\code2yaml.json D:\\JavaCode\\partner-center-java-docs\\repo.json"
-    }
-  }
-}
