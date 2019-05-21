@@ -14,23 +14,26 @@
         public const string FolderName = "name";
 
         public const string Src = @"src\";
-        public const string PackageFolder = @"packages";
-        public const string DocletLocation = @"tools\docfx-doclet.jar";
+        public const string Doc = "_javadoc";
+        public const string PackageFolder = "packages";
 
-        public static class BuildTool
+        public const string DocletClass = "com.microsoft.doclet.DocFxDoclet";
+        public const string DocletLocation = @"tools\docfx-doclet.jar";
+        public const string Files = "files";
+        public const string Options = "options";
+
+        public const string Toc = "toc.yml";
+
+        public static class Extensions
         {
-            public const string Maven = "pom.xml";
+            public const string Jar = "jar";
+            public const string Java = "java";
+            public const string Yaml = "yml";
         }
 
-        public static class JavadocArgumentModel
+        public static class BuildToolConfig
         {
-            public const string ClassPath = "-classpath";
-            public const string Encoding = "-encoding";
-            public const string DocletPath = "-docletpath";
-            public const string Doclet = "-doclet";
-            public const string SourcePath = "-sourcepath";
-            public const string OutputPath = "-outputpath";
-            public const string SubPackages = "-subpackages";
+            public const string Maven = "pom.xml";
         }
     }
 }
