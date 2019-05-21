@@ -80,7 +80,7 @@
             var sourcePath = string.Join(";", GetInputPathsFromConfig(repositoryPath));
             var outputPath = Path.Combine(repositoryPath, Constants.Doc);
 
-            return "  -classpath " + dependencies
+            return "-classpath " + dependencies
               + " -encoding UTF-8"
               + " -docletpath " + docletPath
               + " -doclet com.microsoft.doclet.DocFxDoclet"

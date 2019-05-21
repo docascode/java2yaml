@@ -15,17 +15,20 @@
 
         public const string Src = @"src\";
         public const string Doc = "_javadoc";
-        public const string PackageFolder = @"packages";
+        public const string PackageFolder = "packages";
 
         public const string DocletClass = "com.microsoft.doclet.DocFxDoclet";
         public const string DocletLocation = @"tools\docfx-doclet.jar";
-        public const string Files = @"files";
-        public const string Options = @"options";
+        public const string Files = "files";
+        public const string Options = "options";
+
+        public const string Toc = "toc.yml";
 
         public static class Extensions
         {
             public const string Jar = "jar";
             public const string Java = "java";
+            public const string Yaml = "yml";
         }
 
         public static class BuildToolConfig
