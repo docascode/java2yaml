@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
 
     public static class FileUtility
     {
@@ -15,14 +14,9 @@
                 .GetFiles(fileName, SearchOption.AllDirectories);
         }
 
-        public static IEnumerable<string> GetFilesByExtension(string rootPath, string extension)
+        public static IEnumerable<string> GetFilesByExtension(string rootPath, string extension = "*")
         {
             Guard.ArgumentNotNullOrEmpty(rootPath, nameof(rootPath));
-
-            if (string.IsNullOrEmpty(extension))
-            {
-                extension = "*";
-            }
 
             var pattern = $"*.{extension}";
             return Directory.GetFiles(rootPath, pattern, SearchOption.AllDirectories);
