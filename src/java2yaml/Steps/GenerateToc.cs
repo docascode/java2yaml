@@ -18,16 +18,13 @@
             {
                 if (config.RepositoryFolders.Count == 1)
                 {
-                    var repositoryPath = config.RepositoryFolders
-                        .First();
-
-                    var sourcePath = Path.Combine(repositoryPath, Constants.Doc);
+                    var sourcePath = Path.Combine(config.RepositoryFolders[0], Constants.Doc);
 
                     ConsoleLogger.WriteLine(new LogEntry
                     {
                         Phase = StepName,
                         Level = LogLevel.Info,
-                        Message = $" Merge toc not reqruied..."
+                        Message = $" Merge TOC not reqruied, copy toc.yml ..."
                     });
 
                     CopyUtility.CopyFile(sourcePath, config.OutputPath, Constants.Toc);

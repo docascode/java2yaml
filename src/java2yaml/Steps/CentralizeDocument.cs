@@ -1,5 +1,6 @@
 ﻿namespace Microsoft.Content.Build.Java2Yaml
 {
+    using System.Collections.Generic;
     using System.IO;
     using System.Threading.Tasks;
 
@@ -27,7 +28,9 @@
                         Message = $" Copy yaml files from {sourcePath} to {config.OutputPath}."
                     });
 
-                    CopyUtility.CopyWithExclusion(sourcePath, config.OutputPath, Constants.Toc);
+                    var exclusions = new List<string> { Constants.Toc };
+
+                    CopyUtility.CopyWithExclusion(sourcePath, config.OutputPath, exclusions);
                 }
             });
         }
