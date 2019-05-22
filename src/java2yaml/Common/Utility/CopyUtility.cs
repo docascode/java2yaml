@@ -22,6 +22,8 @@
             var files = FileUtility.GetFilesByExtension(sourcePath, Constants.Extensions.Yaml)
                 .Where(f => !IsExclude(exclusions, Path.GetFileName(f)))
                 .ToList();
+            
+            CopyFiles(files, targetPath);
 
             Console.WriteLine($"Total {files.Count} copied.");
         }
