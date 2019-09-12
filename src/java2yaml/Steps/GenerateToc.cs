@@ -65,7 +65,7 @@
         private List<string> GetTocList()
         {
             return ( _config.RepositoryFolders
-                    .Select(path => FileUtility.GetFilesByName(Path.Combine(path, Constants.Doc), Constants.Toc).FirstOrDefault())
+                    .Select(path => FileUtility.GetFilesByName(Path.Combine(path, Constants.Doc), Constants.Toc).First())
                     .Select(x => x.FullName.ToString())
                     .ToList()
             );

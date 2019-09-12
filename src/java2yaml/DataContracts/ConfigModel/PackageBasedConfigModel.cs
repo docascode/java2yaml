@@ -6,7 +6,6 @@
     using Newtonsoft.Json;
 
     [Serializable]
-
     public class PackageBasedConfigModel
     {
         [JsonProperty(Constants.OutputPath, Required = Required.DisallowNull)]
