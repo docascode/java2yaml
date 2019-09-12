@@ -52,12 +52,25 @@
 
         private static bool ValidateConfig(string[] args)
         {
-            if (args.Length != 0 && args.Length != 2)
+            if (args.Length == 1)
             {
-                Console.Error.WriteLine("Unrecognized parameters. Usage : Java2Yaml.exe [code2yaml.json, repo.json]");
+                return ValidateByPackageBased(args);
+            }
+            else if (args.Length == 0 || args.Length == 2)
+            {
+                return ValidateBySouceBased(args);
+            }
+            else
+            {
+                Console.Error.WriteLine("Unrecognized parameters.");
+                Console.Error.WriteLine("Source-based Usage : Java2Yaml.exe [code2yaml.json, repo.json]");
+                Console.Error.WriteLine("Package-based Usage : Java2Yaml.exe [package.json]");
                 return false;
             }
+        }
 
+        private static bool ValidateBySouceBased(string[] args)
+        {
             string configPath = args.Length == 0 ? Constants.ConfigFileName : args[0];
             string repoListPath = args.Length == 0 ? Constants.RepoListFileName : args[1];
 
@@ -82,10 +95,35 @@
             return true;
         }
 
+        private static bool ValidateByPackageBased(string[] args)
+        {
+            string packageConfigPath = args[0];
+
+            if (!File.Exists(packageConfigPath) )
+            {
+                Console.Error.WriteLine($"Cannot find config file: {packageConfigPath}.");
+                return false;
+            }
+
+            try
+            {
+                _config = ConfigLoader.LoadConfig(Path.GetFullPath(packageConfigPath));
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Fail to deserialize config files: {packageConfigPath}. Exception: {ex}");
+                return false;
+            }
+
+            Console.WriteLine($"Config files {packageConfigPath} found. Start processing...");
+
+            return true;
+        }
+
         private static bool IsDocletExstis()
         {
             var doclet = Path.Combine(PathUtility.GetAssemblyDirectory(), Constants.DocletLocation);
-            
+
             if (File.Exists(doclet))
             {
                 return true;

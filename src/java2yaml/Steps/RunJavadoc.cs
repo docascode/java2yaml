@@ -105,7 +105,7 @@
         {
             var directories = GetInputPathsFromConfig(repositoryPath);
 
-            if (_config.ExcludePaths.Count == 0)
+            if (_config.ExcludePaths?.Count == 0)
             {
                 return directories;
             }
@@ -114,7 +114,6 @@
                 return RemoveExcludePaths(directories);
             }
         }
-
         private List<string> GetInputPathsFromConfig(string repositoryPath)
         {
             return _config.InputPaths
