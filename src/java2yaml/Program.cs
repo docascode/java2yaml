@@ -97,7 +97,7 @@
 
         private static bool ValidateByPackageBased(string[] args)
         {
-            string packageConfigPath = args.Length == 0 ? Constants.packageConfigFileName : args[0];
+            string packageConfigPath = args[0];
 
             if (!File.Exists(packageConfigPath) )
             {

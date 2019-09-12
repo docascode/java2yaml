@@ -1,5 +1,6 @@
 ﻿namespace Microsoft.Content.Build.Java2Yaml
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -10,6 +11,11 @@
     {
         public static ConfigModel LoadConfig(string configPath, string repoListPath)
         {
+            if (string.IsNullOrWhiteSpace(configPath) || string.IsNullOrWhiteSpace(repoListPath))
+            {
+                throw new ArgumentException($"{nameof(configPath)} or {nameof(repoListPath)} cannot be null or empty.");
+            }
+
             var config = JsonConvert.DeserializeObject<ConfigModel>(File.ReadAllText(configPath));
 
             config.InputPaths = (from p in config.InputPaths
@@ -25,7 +31,7 @@
 
             config.RepositoryFolders = LoadRepositoryList(repoListPath);
 
-            if (string.IsNullOrEmpty(config.OutputPath) || string.IsNullOrWhiteSpace(config.OutputPath))
+            if (string.IsNullOrWhiteSpace(config.OutputPath))
             {
                 throw new InvalidDataException($"Invalid \"{Constants.OutputPath}\" in {configPath}");
             }
@@ -35,6 +41,11 @@
 
         public static ConfigModel LoadConfig(string packageConfigPath)
         {
+            if (string.IsNullOrWhiteSpace(packageConfigPath))
+            {
+                throw new ArgumentException($"{packageConfigPath} cannot be null or empty.");
+            }
+
             var packageConfig = JsonConvert.DeserializeObject<PackageBasedConfigModel>(File.ReadAllText(packageConfigPath));
 
             var folderList = LoadPackageFolders(packageConfigPath, packageConfig);
@@ -58,7 +69,7 @@
             var repos = JsonConvert.DeserializeObject<RepositoryModel>(File.ReadAllText(repoListPath)).Repository;
 
             var list = (from p in repos
-                        let FolderName = string.Concat(Constants.Src, p.FolderName)
+                        let FolderName = Path.Combine(Constants.Src, p.FolderName)
                         select TransformPath(repoListPath, FolderName))
                 .ToList();
 
@@ -68,7 +79,7 @@
         private static List<string> LoadPackageFolders(string configPath, PackageBasedConfigModel packageConfig)
         {
             return (from p in packageConfig.Packages
-                    let FolderName = string.Concat(Constants.Src, p.ArtifactId)
+                    let FolderName = Path.Combine(Constants.Src, p.ArtifactId)
                     select TransformPath(configPath, FolderName))
             .ToList();
         }
@@ -78,7 +89,7 @@
             return (from p in packageConfig.Packages
                     where p.ExcludePaths != null
                     from e in p.ExcludePaths
-                    let FolderName = string.Concat(Constants.Src, p.ArtifactId, e)
+                    let FolderName = Path.Combine(Constants.Src, p.ArtifactId, e)
                     select TransformPath(configPath, FolderName))
             .ToList();
         }
