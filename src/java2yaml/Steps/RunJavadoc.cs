@@ -117,7 +117,7 @@
         private List<string> GetInputPathsFromConfig(string repositoryPath)
         {
             return _config.InputPaths
-                .Where(p => p.StartsWith(repositoryPath))
+                .Where(p => p.Equals(repositoryPath))
                 .ToList();
         }
 
