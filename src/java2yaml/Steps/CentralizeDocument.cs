@@ -12,9 +12,11 @@
         {
             return Task.Run(() =>
             {
-                if (!Directory.Exists(config.OutputPath))
+                var targetPath = Path.Combine(Directory.GetParent(config.OutputPath).ToString(), Constants.Doc);
+
+                if (!Directory.Exists(targetPath))
                 {
-                    Directory.CreateDirectory(config.OutputPath);
+                    Directory.CreateDirectory(targetPath);
                 }
 
                 foreach (var repositoryPath in config.RepositoryFolders)
@@ -25,12 +27,12 @@
                     {
                         Phase = StepName,
                         Level = LogLevel.Info,
-                        Message = $" Copy yaml files from {sourcePath} to {config.OutputPath}."
+                        Message = $" Copy yaml files from {sourcePath} to {targetPath}."
                     });
 
                     var exclusions = new List<string> { Constants.Toc };
 
-                    CopyUtility.CopyWithExclusion(sourcePath, config.OutputPath, exclusions);
+                    CopyUtility.CopyWithExclusion(sourcePath, targetPath, exclusions);
                 }
             });
         }
