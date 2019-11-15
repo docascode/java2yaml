@@ -17,7 +17,7 @@
         public const string ArtifactId = "packageArtifactId";
 
         public const string Src = @"src\";
-        public const string Doc = "_javadoc";
+        public const string Doc = "_javadocs";
         public const string PackageFolder = "Dependency";
 
         public const string DocletClass = "com.microsoft.doclet.DocFxDoclet";

@@ -9,6 +9,7 @@
 
     public static class ConfigLoader
     {
+        // Load configuration from code2yaml.json and repo.json
         public static ConfigModel LoadConfig(string configPath, string repoListPath)
         {
             if (string.IsNullOrWhiteSpace(configPath) || string.IsNullOrWhiteSpace(repoListPath))
@@ -39,29 +40,35 @@
             return config;
         }
 
-        public static ConfigModel LoadConfig(string packageConfigPath)
+        // Load configuration from package.json
+        public static List<ConfigModel> LoadConfig(string packageConfigPath)
         {
             if (string.IsNullOrWhiteSpace(packageConfigPath))
             {
                 throw new ArgumentException($"{packageConfigPath} cannot be null or empty.");
             }
 
-            var packageConfig = JsonConvert.DeserializeObject<PackageBasedConfigModel>(File.ReadAllText(packageConfigPath));
+            var configs = new List<ConfigModel>();
 
-            var folderList = LoadPackageFolders(packageConfigPath, packageConfig);
+            var packageBasedConfigs = JsonConvert.DeserializeObject<List<PackageBasedConfigModel>>(File.ReadAllText(packageConfigPath));
 
-            var excludePaths = LoadExcludePaths(packageConfigPath, packageConfig);
-
-            // the path of unzipped -soruce.jar will be consider as inputPath, as it contains all the .java files we need to document for each artifact.
-            var config = new ConfigModel
+            foreach(var config in packageBasedConfigs)
             {
-                InputPaths = folderList,
-                OutputPath = TransformPath(packageConfigPath, packageConfig.OutputPath),
-                ExcludePaths = excludePaths,
-                RepositoryFolders = folderList
-            };
+                var folderList = LoadPackageFolders(packageConfigPath, config);
 
-            return config;
+                var excludePaths = LoadExcludePaths(packageConfigPath, config);
+
+                // the path of unzipped -soruce.jar will be consider as inputPath, as it contains all the .java files we need to document for each artifact.
+                configs.Add(new ConfigModel
+                {
+                    InputPaths = folderList,
+                    OutputPath = TransformPath(packageConfigPath, config.OutputPath),
+                    ExcludePaths = excludePaths,
+                    RepositoryFolders = folderList
+                });               
+            }
+
+            return configs;
         }
 
         public static List<string> LoadRepositoryList(string repoListPath)
@@ -76,10 +83,10 @@
             return list;
         }
 
-        private static List<string> LoadPackageFolders(string configPath, PackageBasedConfigModel packageConfig)
+        private static List<string> LoadPackageFolders(string configPath, PackageBasedConfigModel packageBasedConfig)
         {
-            return (from p in packageConfig.Packages
-                    let FolderName = Path.Combine(Constants.Src, p.ArtifactId)
+            return (from p in packageBasedConfig.Packages
+                    let FolderName = Path.Combine(Constants.Src, packageBasedConfig.OutputPath, p.ArtifactId)
                     select TransformPath(configPath, FolderName))
             .ToList();
         }
@@ -89,7 +96,7 @@
             return (from p in packageConfig.Packages
                     where p.ExcludePaths != null
                     from e in p.ExcludePaths
-                    let FolderName = Path.Combine(Constants.Src, p.ArtifactId, e)
+                    let FolderName = Path.Combine(Constants.Src, packageConfig.OutputPath, p.ArtifactId, e)
                     select TransformPath(configPath, FolderName))
             .ToList();
         }

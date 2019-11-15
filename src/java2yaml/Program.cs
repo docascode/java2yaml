@@ -1,13 +1,14 @@
 ﻿namespace Microsoft.Content.Build.Java2Yaml
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Threading.Tasks;
 
     class Program
     {
-        private static ConfigModel _config;
+        private static List<ConfigModel> _configs;
 
         static async Task<int> Main(string[] args)
         {
@@ -32,7 +33,17 @@
 
             try
             {
-                await procedure.RunAsync(_config);
+                foreach (var config in _configs)
+                {
+                    ConsoleLogger.WriteLine(new LogEntry
+                    {
+                        Phase = "Initialize",
+                        Level = LogLevel.Info,
+                        Message = $" {config.RepositoryFolders.Count} package(s) to process, target folder: '{config.OutputPath}'"
+                    });
+
+                    await procedure.RunAsync(config);
+                }
                 status = 0;
             }
 
@@ -82,7 +93,7 @@
 
             try
             {
-                _config = ConfigLoader.LoadConfig(Path.GetFullPath(configPath), Path.GetFullPath(repoListPath));
+                _configs.Add(ConfigLoader.LoadConfig(Path.GetFullPath(configPath), Path.GetFullPath(repoListPath)));
             }
             catch (Exception ex)
             {
@@ -99,7 +110,7 @@
         {
             string packageConfigPath = args[0];
 
-            if (!File.Exists(packageConfigPath) )
+            if (!File.Exists(packageConfigPath))
             {
                 Console.Error.WriteLine($"Cannot find config file: {packageConfigPath}.");
                 return false;
@@ -107,7 +118,7 @@
 
             try
             {
-                _config = ConfigLoader.LoadConfig(Path.GetFullPath(packageConfigPath));
+                _configs = ConfigLoader.LoadConfig(Path.GetFullPath(packageConfigPath));
             }
             catch (Exception ex)
             {

@@ -22,6 +22,7 @@
             return Task.Run(() =>
             {
                 _config = config;
+                var targetPath = Path.Combine(Directory.GetParent(config.OutputPath).ToString(), Constants.Doc);
 
                 if (_config.RepositoryFolders.Count == 1)
                 {
@@ -34,24 +35,24 @@
                         Message = $" Merge TOC not reqruied, copy toc.yml ..."
                     });
 
-                    CopyUtility.CopyFile(sourcePath, config.OutputPath, Constants.Toc);
+                    CopyUtility.CopyFile(sourcePath, targetPath, Constants.Toc);
                 }
                 else
                 {
-                    MergeToc();
+                    MergeToc(targetPath);
 
                     ConsoleLogger.WriteLine(new LogEntry
                     {
                         Phase = StepName,
                         Level = LogLevel.Info,
-                        Message = $" Merge completed, write toc.yml to {_config.OutputPath} ..."
+                        Message = $" Merge TOC completed, write toc.yml to {targetPath} ..."
                     });
                 }
             }
             );
         }
 
-        private void MergeToc()
+        private void MergeToc(string targetPath)
         {
             var tocFiles = new List<TocYaml>();
 
@@ -59,7 +60,7 @@
                 .Select(file => DeserializeYaml(file))
                 .ToList();
 
-            WriteMergedTocToDisk(tocFiles);
+            WriteMergedTocToDisk(tocFiles, targetPath);
         }
 
         private List<string> GetTocList()
@@ -80,9 +81,9 @@
             }
         }
 
-        private void WriteMergedTocToDisk(List<TocYaml> tocFiles)
+        private void WriteMergedTocToDisk(List<TocYaml> tocFiles, string targetPath)
         {
-            string tocFile = Path.Combine(_config.OutputPath, Constants.Toc);
+            string tocFile = Path.Combine(targetPath, Constants.Toc);
 
             using (var writer = new StreamWriter(tocFile))
             {
