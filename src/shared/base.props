@@ -1,6 +1,11 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <configuration>
+    <runtime>
+      <AppContextSwitchOverrides value="Switch.System.IO.UseLegacyPathHandling=false;Switch.System.IO.BlockLongPaths=false" />
+    </runtime>
+    </configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <OutputPath Condition="'$(OutputPath)'==''">$(MSBuildThisFileDirectory)..\..\target\$(Configuration)\$(MSBuildProjectName)\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
