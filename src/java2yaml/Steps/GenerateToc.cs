@@ -24,9 +24,9 @@
                 _config = config;
                 var targetPath = Path.Combine(Directory.GetParent(config.OutputPath).ToString(), Constants.Doc);
 
-                if (_config.RepositoryFolders.Count == 1)
+                if (_config.PackageConfigs.Count == 1)
                 {
-                    var sourcePath = Path.Combine(config.RepositoryFolders[0], Constants.Doc);
+                    var sourcePath = Path.Combine(config.PackageConfigs.FirstOrDefault().RepositoryFolder, Constants.Doc);
 
                     ConsoleLogger.WriteLine(new LogEntry
                     {
@@ -65,8 +65,8 @@
 
         private List<string> GetTocList()
         {
-            return ( _config.RepositoryFolders
-                    .Select(path => FileUtility.GetFilesByName(Path.Combine(path, Constants.Doc), Constants.Toc).First())
+            return ( _config.PackageConfigs
+                    .Select(pak => FileUtility.GetFilesByName(Path.Combine(pak.RepositoryFolder, Constants.Doc), Constants.Toc).First())
                     .Select(x => x.FullName.ToString())
                     .ToList()
             );

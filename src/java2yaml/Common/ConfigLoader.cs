@@ -28,13 +28,12 @@
                 var excludePaths = LoadExcludePaths(packageConfigPath, config);
 
                 // the path of unzipped -soruce.jar will be consider as inputPath, as it contains all the .java files we need to document for each artifact.
-                configs.Add(new ConfigModel
-                {
-                    InputPaths = folderList,
-                    OutputPath = TransformPath(packageConfigPath, config.OutputPath),
-                    ExcludePaths = excludePaths,
-                    RepositoryFolders = folderList
-                });               
+                var pak = new ConfigModel(packageConfigPath, config);
+                pak.InputPaths = folderList;
+                pak.ExcludePaths = excludePaths;
+
+                configs.Add(pak);
+                
             }
 
             return configs;
@@ -46,7 +45,7 @@
 
             var list = (from p in repos
                         let FolderName = Path.Combine(Constants.Src, p.FolderName)
-                        select TransformPath(repoListPath, FolderName))
+                        select PathUtility.TransformPath(repoListPath, FolderName))
                 .ToList();
 
             return list;
@@ -56,7 +55,7 @@
         {
             return (from p in packageBasedConfig.Packages
                     let FolderName = Path.Combine(Constants.Src, packageBasedConfig.OutputPath, p.ArtifactId)
-                    select TransformPath(configPath, FolderName))
+                    select PathUtility.TransformPath(configPath, FolderName))
             .ToList();
         }
 
@@ -66,13 +65,8 @@
                     where p.ExcludePaths != null
                     from e in p.ExcludePaths
                     let FolderName = Path.Combine(Constants.Src, packageConfig.OutputPath, p.ArtifactId, e)
-                    select TransformPath(configPath, FolderName))
+                    select PathUtility.TransformPath(configPath, FolderName))
             .ToList();
-        }
-
-        private static string TransformPath(string configPath, string path)
-        {
-            return PathUtility.IsRelativePath(path) ? PathUtility.GetAbsolutePath(configPath, path) : path;
         }
     }
 }

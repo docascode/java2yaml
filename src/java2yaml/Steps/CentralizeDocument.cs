@@ -19,9 +19,9 @@
                     Directory.CreateDirectory(targetPath);
                 }
 
-                foreach (var repositoryPath in config.RepositoryFolders)
+                foreach (var pak in config.PackageConfigs)
                 {
-                    var sourcePath = Path.Combine(repositoryPath, Constants.Doc);
+                    var sourcePath = Path.Combine(pak.RepositoryFolder, Constants.Doc);
 
                     ConsoleLogger.WriteLine(new LogEntry
                     {

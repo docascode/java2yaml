@@ -8,13 +8,18 @@
         public const string packageConfigFileName = "Package.json";
 
         public const string Config = "config";
-        public const string InputPaths = "input_paths";
         public const string OutputPath = "output_path";
-        public const string ExcludePaths = "exclude_paths";
+
         public const string Language = "language";
         public const string Repo = "repo";
         public const string FolderName = "name";
+
         public const string ArtifactId = "packageArtifactId";
+        public const string GroupId = "packageGroupId";
+        public const string PackageVersion = "packageVersion";
+        public const string InputPaths = "inputPaths";
+        public const string ExcludePaths = "excludePaths";
+        public const string ExcludePackages = "excludePackages";
 
         public const string Src = @"src\";
         public const string Doc = "_javadocs";

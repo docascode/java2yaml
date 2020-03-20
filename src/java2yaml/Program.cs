@@ -39,7 +39,7 @@
                     {
                         Phase = "Initialize",
                         Level = LogLevel.Info,
-                        Message = $" {config.RepositoryFolders.Count} package(s) to process, target folder: '{config.OutputPath}'"
+                        Message = $" {config.PackageConfigs.Count} package(s) to process, target folder: '{config.OutputPath}'"
                     });
 
                     await procedure.RunAsync(config);

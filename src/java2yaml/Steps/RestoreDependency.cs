@@ -46,7 +46,7 @@
 
         private void RunRestoreCommand(string packagePath, string workingDirectory)
         {
-            string commandLineArgs = string.Concat("/c mvn dependency:copy-dependencies -DoutputDirectory=", packagePath);
+            string commandLineArgs = string.Concat("/c mvn dependency:copy-dependencies -P !azure-mgmt-sdk-test-jar -DoutputDirectory=", packagePath);
 
             ConsoleLogger.WriteLine(new LogEntry
             {
