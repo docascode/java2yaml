@@ -76,6 +76,11 @@
         {
             return String.Concat(@"\\?\", path);
         }
+
+        public static string TransformPath(string filePath, string path)
+        {
+            return IsRelativePath(path) ? GetAbsolutePath(filePath, path) : path;
+        }
     }
 
     public class FilePathComparer

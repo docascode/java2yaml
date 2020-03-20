@@ -10,11 +10,11 @@
         {
             return Task.Run(async () =>
             {
-                foreach (var path in config.RepositoryFolders)
+                foreach (var packageConfig in config.PackageConfigs)
                 {
                     var procedure = new StepCollection(
-                        new RestoreDependency(path),
-                        new RunJavadoc(path));
+                        new RestoreDependency(packageConfig.RepositoryFolder),
+                        new RunJavadoc(packageConfig.RepositoryFolder, packageConfig.Package));
 
                     await procedure.RunAsync(config);
                 }
