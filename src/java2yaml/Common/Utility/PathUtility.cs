@@ -71,6 +71,16 @@
             return Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
         }
 
+        // This snippet requires Framework 4.6.2, NDP462-DevPack-KB3151934 installed, and configraiton in .csproj
+        public static string ResolveLongPath(string path)
+        {
+            return String.Concat(@"\\?\", path);
+        }
+
+        public static string TransformPath(string filePath, string path)
+        {
+            return IsRelativePath(path) ? GetAbsolutePath(filePath, path) : path;
+        }
     }
 
     public class FilePathComparer

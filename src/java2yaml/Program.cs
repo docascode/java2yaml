@@ -39,7 +39,7 @@
                     {
                         Phase = "Initialize",
                         Level = LogLevel.Info,
-                        Message = $" {config.RepositoryFolders.Count} package(s) to process, target folder: '{config.OutputPath}'"
+                        Message = $" {config.PackageConfigs.Count} package(s) to process, target folder: '{config.OutputPath}'"
                     });
 
                     await procedure.RunAsync(config);
@@ -67,43 +67,12 @@
             {
                 return ValidateByPackageBased(args);
             }
-            else if (args.Length == 0 || args.Length == 2)
-            {
-                return ValidateBySouceBased(args);
-            }
             else
             {
                 Console.Error.WriteLine("Unrecognized parameters.");
-                Console.Error.WriteLine("Source-based Usage : Java2Yaml.exe [code2yaml.json, repo.json]");
                 Console.Error.WriteLine("Package-based Usage : Java2Yaml.exe [package.json]");
                 return false;
             }
-        }
-
-        private static bool ValidateBySouceBased(string[] args)
-        {
-            string configPath = args.Length == 0 ? Constants.ConfigFileName : args[0];
-            string repoListPath = args.Length == 0 ? Constants.RepoListFileName : args[1];
-
-            if (!File.Exists(configPath) || !File.Exists(repoListPath))
-            {
-                Console.Error.WriteLine($"Cannot find config file: {configPath} or {repoListPath}");
-                return false;
-            }
-
-            try
-            {
-                _configs.Add(ConfigLoader.LoadConfig(Path.GetFullPath(configPath), Path.GetFullPath(repoListPath)));
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Fail to deserialize config files: {configPath}, {repoListPath} . Exception: {ex}");
-                return false;
-            }
-
-            Console.WriteLine($"Config files {configPath}, {repoListPath} found. Start processing...");
-
-            return true;
         }
 
         private static bool ValidateByPackageBased(string[] args)
