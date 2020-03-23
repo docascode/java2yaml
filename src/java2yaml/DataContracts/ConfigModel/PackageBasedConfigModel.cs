@@ -22,10 +22,19 @@
         [JsonProperty(Constants.ArtifactId, Required = Required.DisallowNull)]
         public string ArtifactId { get; set; }
 
+        [JsonProperty(Constants.GroupId, Required = Required.DisallowNull)]
+        public string GroupId { get; set; }
+
+        [JsonProperty(Constants.PackageVersion, Required = Required.DisallowNull)]
+        public string PackageVersion { get; set; }
+
         [JsonProperty(Constants.InputPaths)]
         public List<string> InputPaths { get; set; }
 
         [JsonProperty(Constants.ExcludePaths)]
         public List<string> ExcludePaths { get; set; }
+
+        [JsonProperty(Constants.ExcludePackages)]
+        public string ExcludePackages { get; set; }
     }
 }

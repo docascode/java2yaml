@@ -8,14 +8,16 @@
 
     public class RunJavadoc : IStep
     {
-        public RunJavadoc(string path)
+        public RunJavadoc(string path, Package package)
         {
             RepositoryPath = path;
+            ExcludePackages = package.ExcludePackages;
         }
 
         public string StepName => "RunJavadoc";
 
         public string RepositoryPath { get; }
+        public string ExcludePackages { get; }
 
         private static ConfigModel _config;
 
@@ -29,7 +31,7 @@
 
                 GenerateFileList(RepositoryPath);
 
-                var options = GenerateOptions(RepositoryPath);
+                var options = GenerateOptions(RepositoryPath, ExcludePackages);
                 var commandLineArgs = $"{options} @{Constants.Files}";
 
                 ConsoleLogger.WriteLine(new LogEntry
@@ -73,19 +75,26 @@
         }
 
         // todo: fix doclet package to allow us invoke with this format "javadoc.exe @options @files"
-        private string GenerateOptions(string repositoryPath)
+        private string GenerateOptions(string repositoryPath, string excludePackages)
         {
             var dependencies = GetDependencies(RepositoryPath);
             var docletPath = Path.Combine(PathUtility.GetAssemblyDirectory(), Constants.DocletLocation);
             var sourcePath = string.Join(";", GetInputPathsFromConfig(repositoryPath));
             var outputPath = Path.Combine(repositoryPath, Constants.Doc);
 
-            return "-classpath " + dependencies
+             var options = "-classpath " + dependencies
               + " -encoding UTF-8"
               + " -docletpath " + docletPath
               + " -doclet com.microsoft.doclet.DocFxDoclet"
               + " -sourcepath " + sourcePath
               + " -outputpath " + outputPath;
+
+            if (null != excludePackages)
+            {
+                options += " -excludePackages " + excludePackages;
+            }
+
+                return options;
         }
 
         private string GetDependencies(string repositoryPath)

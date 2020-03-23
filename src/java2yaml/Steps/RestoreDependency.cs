@@ -15,6 +15,11 @@
 
         public string RepositoryPath { get; }
 
+        // This is profiles to exclude unpublished test jar packages when download dependencies
+        // For some packages, their test jar does not publish to Maven Central but they cannot be removed from pom
+        // But copy-dependencies must go through test scope, so work around by putting test jar to a profile, and skip this profile
+        public string[] MavenProfileToExclude = new string[1] { "!azure-mgmt-sdk-test-jar" };
+
         public Task RunAsync(ConfigModel config)
         {
             return Task.Run(() =>
@@ -46,7 +51,9 @@
 
         private void RunRestoreCommand(string packagePath, string workingDirectory)
         {
-            string commandLineArgs = string.Concat("/c mvn dependency:copy-dependencies -DoutputDirectory=", packagePath);
+            string profilesToExclude = string.Join(",", MavenProfileToExclude);
+
+            string commandLineArgs = string.Concat("/c mvn dependency:copy-dependencies -P ", profilesToExclude, " -DoutputDirectory=", packagePath);
 
             ConsoleLogger.WriteLine(new LogEntry
             {

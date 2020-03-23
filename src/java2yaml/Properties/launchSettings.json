@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "java2yaml": {
+      "commandName": "Project",
+      "commandLineArgs": "D:\\JavaWorkItem\\OnBoardAzuremgt\\FixAzureMgt\\target_repo\\package.json"
+    }
+  }
+}
