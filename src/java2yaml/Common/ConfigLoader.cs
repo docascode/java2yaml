@@ -9,37 +9,6 @@
 
     public static class ConfigLoader
     {
-        // Load configuration from code2yaml.json and repo.json
-        public static ConfigModel LoadConfig(string configPath, string repoListPath)
-        {
-            if (string.IsNullOrWhiteSpace(configPath) || string.IsNullOrWhiteSpace(repoListPath))
-            {
-                throw new ArgumentException($"{nameof(configPath)} or {nameof(repoListPath)} cannot be null or empty.");
-            }
-
-            var config = JsonConvert.DeserializeObject<ConfigModel>(File.ReadAllText(configPath));
-
-            config.InputPaths = (from p in config.InputPaths
-                                 select TransformPath(configPath, p)).ToList();
-
-            config.OutputPath = TransformPath(configPath, config.OutputPath);
-
-            if (config.ExcludePaths != null)
-            {
-                config.ExcludePaths = (from p in config.ExcludePaths
-                                       select TransformPath(configPath, p)).ToList();
-            }
-
-            config.RepositoryFolders = LoadRepositoryList(repoListPath);
-
-            if (string.IsNullOrWhiteSpace(config.OutputPath))
-            {
-                throw new InvalidDataException($"Invalid \"{Constants.OutputPath}\" in {configPath}");
-            }
-
-            return config;
-        }
-
         // Load configuration from package.json
         public static List<ConfigModel> LoadConfig(string packageConfigPath)
         {
