@@ -14,7 +14,9 @@
                 {
                     var procedure = new StepCollection(
                         new RestoreDependency(packageConfig.RepositoryFolder),
-                        new RunJavadoc(packageConfig.RepositoryFolder, packageConfig.Package));
+                        new RunJavadoc(packageConfig.RepositoryFolder, packageConfig.Package),
+                        new ApplyArtifactInformation(packageConfig.RepositoryFolder, packageConfig.Package));
+
 
                     await procedure.RunAsync(config);
                 }
