@@ -78,7 +78,7 @@
         private string GenerateOptions(string repositoryPath, string excludePackages)
         {
             var dependencies = GetDependencies(RepositoryPath);
-            var docletPath = Path.Combine(PathUtility.GetAssemblyDirectory(), Constants.DocletLocation);
+            var docletPath = _config.DocletPath;
             var sourcePath = string.Join(";", GetInputPathsFromConfig(repositoryPath));
             var outputPath = Path.Combine(repositoryPath, Constants.Doc);
 

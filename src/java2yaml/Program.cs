@@ -9,14 +9,10 @@
     class Program
     {
         private static List<ConfigModel> _configs;
+        private static string _docletPath;
 
         static async Task<int> Main(string[] args)
         {
-            if (!IsDocletExstis())
-            {
-                return 1;
-            }
-
             if (!ValidateConfig(args))
             {
                 return 1;
@@ -35,6 +31,8 @@
             {
                 foreach (var config in _configs)
                 {
+                    config.DocletPath = _docletPath;
+
                     ConsoleLogger.WriteLine(new LogEntry
                     {
                         Phase = "Initialize",
@@ -65,19 +63,27 @@
         {
             if (args.Length == 1)
             {
-                return ValidateByPackageBased(args);
+                string docletPath = Path.Combine(PathUtility.GetAssemblyDirectory(), Constants.DocletLocation);
+                return ValidatePackageConfig(args[0]) && IsDocletExstis(docletPath);
+            }
+            else if (args.Length == 2)
+            {
+                // args[0] - package.json
+                // args[1] - doclet path
+                return ValidatePackageConfig(args[0]) && IsDocletExstis(args[1]);
             }
             else
             {
                 Console.Error.WriteLine("Unrecognized parameters.");
                 Console.Error.WriteLine("Package-based Usage : Java2Yaml.exe [package.json]");
+                Console.Error.WriteLine("Or : Java2Yaml.exe [package.json] [doclet-path]");
                 return false;
             }
         }
 
-        private static bool ValidateByPackageBased(string[] args)
+        private static bool ValidatePackageConfig(string path)
         {
-            string packageConfigPath = args[0];
+            string packageConfigPath = Path.GetFullPath(path);
 
             if (!File.Exists(packageConfigPath))
             {
@@ -95,17 +101,19 @@
                 return false;
             }
 
-            Console.WriteLine($"Config files {packageConfigPath} found. Start processing...");
+            Console.WriteLine($"Config file {packageConfigPath} found.");
 
             return true;
         }
 
-        private static bool IsDocletExstis()
+        private static bool IsDocletExstis(string docletPath)
         {
-            var doclet = Path.Combine(PathUtility.GetAssemblyDirectory(), Constants.DocletLocation);
+            var doclet = Path.GetFullPath(docletPath);
 
             if (File.Exists(doclet))
             {
+                _docletPath = doclet;
+                Console.WriteLine($"Config file {doclet} found.");
                 return true;
             }
             else

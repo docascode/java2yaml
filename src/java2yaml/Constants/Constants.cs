@@ -17,6 +17,7 @@
         public const string InputPaths = "inputPaths";
         public const string ExcludePaths = "excludePaths";
         public const string ExcludePackages = "excludePackages";
+        public const string DocletPath = "docletPath";
 
         public const string Src = @"src\";
         public const string Doc = "_javadocs";

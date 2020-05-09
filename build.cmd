@@ -23,24 +23,10 @@ SET CachedNuget=%LocalAppData%\NuGet\NuGet.exe
 :: nuget wrapper requires nuget.exe path in %PATH%
 SET PATH=%PATH%;%LocalAppData%\NuGet
 
-:: Download docfx-doclet
-CALL :DownloadDoclet
-
 :: Build
 dotnet build %BuildProj%
 SET BuildErrorLevel=%ERRORLEVEL%
 GOTO :Exit
-
-:DownloadDoclet
-SET DocletLocation=%~dp0src\java2yaml\Tools
-IF NOT EXIST "%DocletLocation%\docfx-doclet.jar" (
-IF NOT EXIST "%DocletLocation%" MD "%DocletLocation%"
-ECHO Download docfx-doclet to "%DocletLocation%" 
-powershell -NoProfile -ExecutionPolicy UnRestricted -Command "$ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest 'https://github.com/docascode/docfx-doclet/releases/latest/download/docfx-doclet-1.0-SNAPSHOT-jar-with-dependencies.jar' -OutFile '%DocletLocation%\docfx-doclet.jar'"
-)
-
-IF NOT EXIST "%DocletLocation%\docfx-doclet.jar" (
-ECHO Cannot find docfx-doclet.jar)
 
 :Exit
 POPD
