@@ -21,6 +21,9 @@
         [JsonProperty(Constants.Language)]
         public string Language { get; set; } = "java";
 
+        [JsonProperty(Constants.DocletPath)]
+        public string DocletPath { get; set; }
+
         public List<PackageConfigModel> PackageConfigs { get; set; }
     }
 
