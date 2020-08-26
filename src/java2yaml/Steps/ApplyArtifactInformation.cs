@@ -1,6 +1,7 @@
 ﻿namespace Microsoft.Content.Build.Java2Yaml
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
@@ -34,15 +35,12 @@
                 {
                     try
                     {
-                        var ymlFileModel = YamlUtility.Deserialize<FileYaml>(PathUtility.ResolveLongPath(yamlFile));
+                        var ymlFile = PathUtility.ResolveLongPath(yamlFile);
+                        string art = "artifact: "+(GetArtifctStringPerPackage());
 
-                        // Add artifact infomation for items declared in class, not neccssary for reference items
-                        foreach (var item in ymlFileModel.Items)
-                        {
-                            item.Artifact = GetArtifctStringPerPackage();
-                        }
+                        File.AppendAllText(ymlFile, art + Environment.NewLine);
 
-                        YamlUtility.Serialize(PathUtility.ResolveLongPath(yamlFile), ymlFileModel, YamlMime.ManagedReference);
+                        ValidateYaml(ymlFile);
                     }
                     catch (Exception)
                     {
@@ -51,7 +49,7 @@
                             {
                                 Phase = StepName,
                                 Level = LogLevel.Error,
-                                Message = $"Failed to process {yamlFile}.",
+                                Message = $"Fail to append artifact for {yamlFile}.",
                             });
                         throw;
                     }
@@ -64,6 +62,25 @@
                     Message = $" Artifact added for {yamlFiles.Count} yaml files."
                 });
             });
+        }
+
+        private void ValidateYaml(string ymlFile)
+        {
+            try
+            {
+                YamlUtility.Deserialize<Dictionary<string, object>>(ymlFile);
+            }
+            catch (Exception)
+            {
+                ConsoleLogger.WriteLine(
+                    new LogEntry
+                    {
+                        Phase = StepName,
+                        Level = LogLevel.Error,
+                        Message = $"Invalid yaml after add artifact.",
+                    });
+                throw;
+            }
         }
 
         string GetArtifctStringPerPackage()

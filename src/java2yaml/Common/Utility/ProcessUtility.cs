@@ -44,7 +44,7 @@
             }
             else
             {
-                var message = $"'\"{fileName}\" {commandLineArgs}' failed in directory '{cwd}' with exit code {process.ExitCode}: \nSTDOUT:'{output}'\nSTDERR:\n'{error}'";
+                var message = $"##[error]java2yaml '\"{fileName}\" {commandLineArgs}' failed in directory '{cwd}' with exit code {process.ExitCode}: \nSTDOUT:'{output}'\nSTDERR:\n'{error}'";
                 throw new InvalidOperationException(message);
             }
         }
