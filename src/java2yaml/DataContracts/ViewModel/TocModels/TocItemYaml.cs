@@ -16,6 +16,9 @@
         [YamlMember(Alias = "href")]
         public string Href { get; set; }
 
+        [YamlMember(Alias = "type")]
+        public string Type { get; set; }
+
         [YamlMember(Alias = "items")]
         public TocYaml Items { get; set; }
     }
