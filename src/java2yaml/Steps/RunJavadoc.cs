@@ -1,5 +1,6 @@
 ﻿namespace Microsoft.Content.Build.Java2Yaml
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -89,9 +90,16 @@
               + " -sourcepath " + sourcePath
               + " -outputpath " + outputPath;
 
-            if (null != excludePackages)
+            if (!String.IsNullOrEmpty(excludePackages))
             {
                 options += " -excludePackages " + excludePackages;
+
+                ConsoleLogger.WriteLine(new LogEntry
+                {
+                    Phase = StepName,
+                    Level = LogLevel.Warning,
+                    Message = $" Invalid excludePackages parameter: '{excludePackages}', processing without applying excludePackages..."
+                });
             }
 
                 return options;

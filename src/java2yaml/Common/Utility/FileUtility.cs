@@ -10,8 +10,7 @@
             Guard.ArgumentNotNullOrEmpty(rootPath, nameof(rootPath));
             Guard.ArgumentNotNullOrEmpty(fileName, nameof(fileName));
 
-            return new DirectoryInfo(rootPath)
-                .GetFiles(fileName, SearchOption.AllDirectories);
+            return new DirectoryInfo(rootPath).GetFiles(fileName, SearchOption.AllDirectories);
         }
 
         public static IEnumerable<string> GetFilesByExtension(string rootPath, string extension = "*")
@@ -20,6 +19,15 @@
 
             var pattern = $"*.{extension}";
             return Directory.GetFiles(rootPath, pattern, SearchOption.AllDirectories);
+        }
+
+        public static IEnumerable<FileInfo> GetFilesByNameExtension(string rootPath, string fileName, string extension = "*")
+        {
+            Guard.ArgumentNotNullOrEmpty(rootPath, nameof(rootPath));
+            Guard.ArgumentNotNullOrEmpty(fileName, nameof(fileName));
+
+            var pattern = $"{fileName}.{extension}";
+            return new DirectoryInfo(rootPath).GetFiles(pattern, SearchOption.AllDirectories);
         }
     }
 }

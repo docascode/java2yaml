@@ -6,14 +6,16 @@
 
     public class RestoreDependency : IStep
     {
-        public RestoreDependency(string path)
+        public RestoreDependency(PackageConfigModel packageConfig, GradleUtility gradleUtility)
         {
-            RepositoryPath = path;
+            _packageConfig = packageConfig;
+            _gradleUtility = gradleUtility;
         }
 
         public string StepName => "RestoreDependency";
 
-        public string RepositoryPath { get; }
+        private PackageConfigModel _packageConfig { get; }
+        private GradleUtility _gradleUtility { get; }
 
         // This is profiles to exclude unpublished test jar packages when download dependencies
         // For some packages, their test jar does not publish to Maven Central but they cannot be removed from pom
@@ -24,10 +26,12 @@
         {
             return Task.Run(() =>
             {
-                Guard.ArgumentNotNullOrEmpty(RepositoryPath, nameof(RepositoryPath));
+                Guard.ArgumentNotNull(_packageConfig, nameof(_packageConfig));
 
-                var projectFiles = FileUtility.GetFilesByName(RepositoryPath, Constants.BuildToolConfig.Maven).ToList();
-                var packagePath = Path.Combine(RepositoryPath, Constants.PackageFolder);
+                var projectFiles = FileUtility.GetFilesByName(_packageConfig.RepositoryFolder, Constants.BuildToolConfig.Maven).ToList();
+                var package = string.Concat(_packageConfig.Package.GroupId, ":"
+                    , _packageConfig.Package.ArtifactId, ":"
+                    , _packageConfig.Package.PackageVersion);
 
                 if (projectFiles.Count == 0)
                 {
@@ -43,17 +47,19 @@
 
                 foreach (var file in projectFiles)
                 {
-                    RunRestoreCommand(packagePath, file.DirectoryName);
+                    RunRestoreCommand(package, file.DirectoryName, _gradleUtility);
                 }
             }
          );
         }
 
-        private void RunRestoreCommand(string packagePath, string workingDirectory)
+        private void RunRestoreCommand(string package, string workingDirectory, GradleUtility gradleUtility)
         {
             string profilesToExclude = string.Join(",", MavenProfileToExclude);
 
-            string commandLineArgs = string.Concat("/c mvn dependency:copy-dependencies -P ", profilesToExclude, " -DoutputDirectory=", packagePath);
+            gradleUtility.GenerateBuilFile(package, workingDirectory);
+
+            string commandLineArgs = "/c gradle getDeps";
 
             ConsoleLogger.WriteLine(new LogEntry
             {

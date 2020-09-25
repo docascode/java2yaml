@@ -10,10 +10,12 @@
         {
             return Task.Run(async () =>
             {
+                GradleUtility gradleUtility = new GradleUtility();
+
                 foreach (var packageConfig in config.PackageConfigs)
                 {
                     var procedure = new StepCollection(
-                        new RestoreDependency(packageConfig.RepositoryFolder),
+                        new RestoreDependency(packageConfig, gradleUtility),
                         new RunJavadoc(packageConfig.RepositoryFolder, packageConfig.Package),
                         new ApplyArtifactInformation(packageConfig.RepositoryFolder, packageConfig.Package));
 
