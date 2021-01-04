@@ -52,15 +52,47 @@
             );
         }
 
+
+        /*  Merge the toc of multiple packages into one toc file.
+         *  Some types are defined under same package(namespace) but are published as different java artifacts.
+         *  It can introduce duplicate toc nodes in package level and cause DocFx build failure.
+         *  Following code will also handle following.
+         *  Merge:
+         *  ### YamlMime:TableOfContent
+         *  - uid: com.microsoft.example
+         *    items:
+         *       - uid: com.microsoft.example.TypeA   
+         *  - uid: com.microsoft.example
+         *    items:
+         *       - uid: com.microsoft.example.TypeB     
+         *  Into:
+         *  ### YamlMime:TableOfContent
+         *  - uid: com.microsoft.example
+         *    items:
+         *       - uid: com.microsoft.example.TypeA
+         *       - uid: com.microsoft.example.TypeB   
+        */
+
         private void MergeToc(string targetPath)
         {
-            var tocFiles = new List<TocYaml>();
-
-            tocFiles = GetTocList()
+            // Get toc files and deserialize to a flat list
+            var tocItems = GetTocList()
                 .Select(file => DeserializeYaml(file))
+                .SelectMany(o => o)
                 .ToList();
 
-            WriteMergedTocToDisk(tocFiles, targetPath);
+            var toc = tocItems
+                .GroupBy(o => o.Uid)
+                .ToDictionary(g => g.Key, g => g.SelectMany(g => g.Items))
+                .Select(kvp => new TocItemYaml()
+                {
+                    Name = kvp.Key,
+                    Uid = kvp.Key,
+                    Items = kvp.Value.ToList()
+                })
+                .ToList();
+
+            WriteMergedTocToDisk(toc, targetPath);
         }
 
         private List<string> GetTocList()
@@ -74,16 +106,16 @@
             );
         }
 
-        private TocYaml DeserializeYaml(string filePath)
+        private List<TocItemYaml> DeserializeYaml(string filePath)
         {
             using (var reader = new StreamReader(filePath))
             {
-                var toc = new Deserializer().Deserialize<TocYaml>(reader);
+                var toc = new Deserializer().Deserialize<List<TocItemYaml>>(reader);
                 return toc;
             }
         }
 
-        private void WriteMergedTocToDisk(List<TocYaml> tocFiles, string targetPath)
+        private void WriteMergedTocToDisk(List<TocItemYaml> tocFiles, string targetPath)
         {
             string tocFile = Path.Combine(targetPath, Constants.Toc);
 
@@ -93,7 +125,7 @@
 
                 var yamlSerializer = new YamlSerializer();
 
-                tocFiles.ForEach(tocYaml => yamlSerializer.Serialize(writer, tocYaml));
+                yamlSerializer.Serialize(writer, tocFiles);
             }
         }
     }

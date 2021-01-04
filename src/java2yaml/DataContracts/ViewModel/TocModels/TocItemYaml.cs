@@ -1,7 +1,7 @@
 ﻿namespace Microsoft.Content.Build.Java2Yaml
 {
     using System;
-
+    using System.Collections.Generic;
     using YamlDotNet.Serialization;
 
     [Serializable]
@@ -13,13 +13,10 @@
         [YamlMember(Alias = "name")]
         public string Name { get; set; }
 
-        [YamlMember(Alias = "href")]
-        public string Href { get; set; }
-
         [YamlMember(Alias = "type")]
         public string Type { get; set; }
 
         [YamlMember(Alias = "items")]
-        public TocYaml Items { get; set; }
+        public List<TocItemYaml> Items { get; set; }
     }
 }
