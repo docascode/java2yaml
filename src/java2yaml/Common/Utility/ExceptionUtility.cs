@@ -29,6 +29,12 @@ namespace Microsoft.Content.Build.Java2Yaml
             Console.WriteLine($"{prefix} '\"{fileName}\" {commandLineArgs}' failed. {ReplaceWithSpace(message)}");
         }
 
+        public static void ThrowExceptionForAzureDevops(string message)
+        {
+            // for Azure DevOps to pick up excpetion
+            Console.WriteLine($"{prefix}  {ReplaceWithSpace(message)}");
+        }
+
         private static string GetMVNErrorFromOutput(StringBuilder output)
         {
             List<string> errors = output.ToString().Split('\n').ToList()

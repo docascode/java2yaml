@@ -3,10 +3,16 @@
     using System;
     using System.Diagnostics;
     using System.Text;
+    using System.Threading;
 
     public static class ProcessUtility
     {
-        public static void Execute(string fileName, string commandLineArgs, string cwd = null, bool redirectOutput = true)
+        public static void Execute(
+            string fileName,
+            string commandLineArgs,
+            string cwd = null,
+            bool redirectOutput = true,
+            int timeoutInMinutes = 20)
         {
             Guard.ArgumentNotNullOrEmpty(fileName, nameof(fileName));
             Guard.ArgumentNotNullOrEmpty(commandLineArgs, nameof(commandLineArgs));
@@ -28,26 +34,67 @@
                 psi.RedirectStandardError = true;
             }
 
-            var process = Process.Start(psi);
-
-            if (redirectOutput)
+            using (AutoResetEvent outputWaitHandle = new AutoResetEvent(false))
+            using (AutoResetEvent errorWaitHandle = new AutoResetEvent(false))
             {
-                output.AppendLine(process.StandardOutput.ReadToEnd());
-                error.AppendLine(process.StandardError.ReadToEnd());
-            }
+                var process = Process.Start(psi);
 
-            process.WaitForExit();
+                process.OutputDataReceived += (sender, e) =>
+                {
+                    if (e.Data == null)
+                    {
+                        outputWaitHandle.Set();
+                    }
+                    else
+                    {
+                        output.AppendLine(e.Data);
+                    }
+                };
+                process.ErrorDataReceived += (sender, e) =>
+                {
+                    if (e.Data == null)
+                    {
+                        errorWaitHandle.Set();
+                    }
+                    else
+                    {
+                        error.AppendLine(e.Data);
+                    }
+                };
 
-            if (process.ExitCode == 0)
-            {
-                Console.WriteLine(output);
+                process.Start();
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
+
+                int timeout = ConvertMinuteToMillisecond(timeoutInMinutes);
+
+                if (process.WaitForExit(timeout) &&
+                    outputWaitHandle.WaitOne(timeout) &&
+                    errorWaitHandle.WaitOne(timeout))
+                {
+                    if (process.ExitCode == 0 && error.Length == 0)
+                    {
+                        Console.WriteLine(output);
+                    }
+                    else
+                    {
+                        var message = $"'\"{fileName}\" {commandLineArgs}' failed in directory '{cwd}' with exit code {process.ExitCode}: \nSTDOUT:'{output}'\nSTDERR:\n'{error}'";
+                        ExceptionUtility.ThrowExceptionForAzureDevops(fileName, commandLineArgs, output, error);                      
+                        throw new InvalidOperationException(message);
+                    }
+                }
+                else
+                {
+                    var message = $"'\"{fileName}\" {commandLineArgs}' failed in directory '{cwd}'. Reached {timeoutInMinutes} minutes timeout.";
+                    ExceptionUtility.ThrowExceptionForAzureDevops(message);
+                    throw new InvalidOperationException(message);
+                }
             }
-            else
-            {
-                ExceptionUtility.ThrowExceptionForAzureDevops(fileName, commandLineArgs, output, error);
-                var message = $"'\"{fileName}\" {commandLineArgs}' failed in directory '{cwd}' with exit code {process.ExitCode}: \nSTDOUT:'{output}'\nSTDERR:\n'{error}'";
-                throw new InvalidOperationException(message);
-            }
+        }
+
+        private static int ConvertMinuteToMillisecond(int minute)
+        {
+            return minute * 60 * 1000;
         }
     }
 }
