@@ -1,5 +1,6 @@
 ﻿namespace Microsoft.Content.Build.Java2Yaml
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -8,10 +9,11 @@
 
     public class RunJavadoc : IStep
     {
+
         public RunJavadoc(string path, Package package)
         {
             RepositoryPath = path;
-            ExcludePackages = package.ExcludePackages;
+            ExcludePackages = loadExcludeRegexes(package.ExcludePackages);
         }
 
         public string StepName => "RunJavadoc";
@@ -20,6 +22,7 @@
         public string ExcludePackages { get; }
 
         private static ConfigModel _config;
+
 
         public Task RunAsync(ConfigModel config)
         {
@@ -94,7 +97,7 @@
                 options += " -excludePackages " + excludePackages;
             }
 
-                return options;
+            return options;
         }
 
         private string GetDependencies(string repositoryPath)
@@ -149,6 +152,31 @@
         private bool InExcludePaths(string dir)
         {
             return _config.ExcludePaths.Any(p => dir.StartsWith(p));
+        }
+
+        private string loadExcludeRegexes(string excludePackages)
+        {
+            StringBuilder excludeStringBuilder = new();
+
+            // Silent on any exception thrown by IO.
+            try
+            {
+                string[] lines = File.ReadAllLines(Constants.ExcludePackagesPath);
+                foreach (string line in lines)
+                {
+                    excludeStringBuilder.Append(line + ":");
+                }
+            }
+            catch 
+            {
+                return excludePackages;
+            }
+            
+            if (excludeStringBuilder.Length > 0)
+            {
+                excludePackages += ":" + excludeStringBuilder.ToString();
+            }
+            return excludePackages;
         }
     }
 }
