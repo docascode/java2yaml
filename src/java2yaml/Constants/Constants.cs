@@ -17,6 +17,7 @@
         public const string InputPaths = "inputPaths";
         public const string ExcludePaths = "excludePaths";
         public const string ExcludePackages = "excludePackages";
+        public const string ExcludePackagesPath = "Configs/excludeConfigs.txt";
         public const string DocletPath = "docletPath";
 
         public const string Src = @"src\";
