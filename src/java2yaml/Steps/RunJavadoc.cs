@@ -12,8 +12,7 @@
         public RunJavadoc(string path, Package package)
         {
             RepositoryPath = path;
-            ExcludePackages = package.ExcludePackages;
-            loadExcludeRegexes(ExcludePackages);
+            ExcludePackages = loadExcludeRegexes(package.ExcludePackages);
         }
 
         public string StepName => "RunJavadoc";
@@ -157,13 +156,18 @@
         private string loadExcludeRegexes(string excludePackages)
         {
             StringBuilder excludeStringBuilder = new StringBuilder();
+            // Throw file exception if IO call failed.
             string[] lines = File.ReadAllLines(Constants.ExcludePackagesPath);
+            
             foreach (string line in lines)
             {
                 excludeStringBuilder.Append(line + ":");
             }
-
-            return excludePackages + ":" + excludeStringBuilder.ToString().TrimEnd(':');
+            if (excludeStringBuilder.Length > 0)
+            {
+                excludePackages += ":" + excludeStringBuilder.ToString();
+            }
+            return excludePackages;
         }
     }
 }
