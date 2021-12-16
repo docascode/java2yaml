@@ -1,5 +1,6 @@
 ﻿namespace Microsoft.Content.Build.Java2Yaml
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -155,14 +156,22 @@
 
         private string loadExcludeRegexes(string excludePackages)
         {
-            StringBuilder excludeStringBuilder = new StringBuilder();
-            // Throw file exception if IO call failed.
-            string[] lines = File.ReadAllLines(Constants.ExcludePackagesPath);
-            
-            foreach (string line in lines)
+            StringBuilder excludeStringBuilder = new();
+
+            // Silent on any exception thrown by IO.
+            try
             {
-                excludeStringBuilder.Append(line + ":");
+                string[] lines = File.ReadAllLines(Constants.ExcludePackagesPath);
+                foreach (string line in lines)
+                {
+                    excludeStringBuilder.Append(line + ":");
+                }
             }
+            catch 
+            {
+                return excludePackages;
+            }
+            
             if (excludeStringBuilder.Length > 0)
             {
                 excludePackages += ":" + excludeStringBuilder.ToString();
